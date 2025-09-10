@@ -45,4 +45,36 @@ public class SimpleLinkedList {
         }
         return sb.toString();
     }
+    @Override
+    public boolean equals(Object obj) {
+    if (this == obj) return true; 
+    if (obj == null || getClass() != obj.getClass()) return false;
+
+    SimpleLinkedList other = (SimpleLinkedList) obj;
+
+    Node currentThis = this.head;
+    Node currentOther = other.head;
+
+    while (currentThis != null && currentOther != null) {
+        if (currentThis.data != currentOther.data) {
+            return false; 
+        }
+        currentThis = currentThis.next;
+        currentOther = currentOther.next;
+    }
+
+
+    return currentThis == null && currentOther == null;
+}
+
+@Override
+public int hashCode() {
+    int hash = 1;
+    Node current = head;
+    while (current != null) {
+        hash = 31 * hash + current.data; 
+        current = current.next;
+    }
+    return hash;
+}
 }
