@@ -3,6 +3,7 @@
  */
 package parcial2;
 
+import parcial2.Model.ApiFrases;
 import parcial2.Model.Frase;
 
 public class App {
@@ -15,6 +16,8 @@ public class App {
 
         Frase f2 = new Frase("LIFENG ES GAY");
         f2.showEncrypted();
+
+        ApiFrases.ejecutar();
 
 
     }
