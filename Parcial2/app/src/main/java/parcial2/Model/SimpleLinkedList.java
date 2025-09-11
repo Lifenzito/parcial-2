@@ -15,89 +15,109 @@ public class SimpleLinkedList {
 
     public void add(int valor) {
         PerformanceMonitor monitor = new PerformanceMonitor("SimpleLinkedList.add");
-        monitor.inicio();
+        try {
+            monitor.inicio();
 
-        loggerTiempos.info("SimpleLinkedList.add: INICIO");
-        logger.info("Add: se va a insertar el valor {} {}", valor, (head == null ? "(lista vacía)" : "(al final)"));
+            loggerTiempos.info("SimpleLinkedList.add: INICIO");
+            logger.info("Add: se va a insertar el valor {} {}", valor, (head == null ? "(lista vacía)" : "(al final)"));
 
-        Node newNode = new Node(valor);
-        if (head == null) {
-            head = newNode;
+            Node newNode = new Node(valor);
+            if (head == null) {
+                head = newNode;
+                size++;
+                logger.info("Add: insertado como primer nodo. size={}", size);
+                loggerTiempos.info("SimpleLinkedList.add: FIN");
+                monitor.finalizado();
+                return;
+            }
+
+            Node Lol = head;
+            int pos = 0;
+            while (Lol.next != null) { Lol = Lol.next; pos++; }
+            Lol.next = newNode;
             size++;
-            logger.info("Add: insertado como primer nodo. size={}", size);
+
+            logger.info("Add: insertado al final (posición tail={}). size={}", pos + 1, size);
             loggerTiempos.info("SimpleLinkedList.add: FIN");
+        } catch (Exception e) {
+            logger.error("Error al agregar el valor {} a la lista: ", valor, e);
+        } finally {
             monitor.finalizado();
-            return;
         }
-
-        Node Lol = head;
-        int pos = 0;
-        while (Lol.next != null) { Lol = Lol.next; pos++; }
-        Lol.next = newNode;
-        size++;
-
-        logger.info("Add: insertado al final (posición tail={}). size={}", pos + 1, size);
-        loggerTiempos.info("SimpleLinkedList.add: FIN");
-        monitor.finalizado();
     }
 
     public void swapAdjacent() {
         PerformanceMonitor monitor = new PerformanceMonitor("SimpleLinkedList.swapAdjacent");
-        monitor.inicio();
+        try {
+            monitor.inicio();
 
-        loggerTiempos.info("SimpleLinkedList.swapAdjacent: INICIO");
-        if (head == null || head.next == null) {
-            logger.warn("SwapAdjacent: no hay suficientes nodos para intercambiar (size={}).", size);
-            loggerTiempos.info("SimpleLinkedList.swapAdjacent: FIN (trivial)");
+            loggerTiempos.info("SimpleLinkedList.swapAdjacent: INICIO");
+            if (head == null || head.next == null) {
+                logger.warn("SwapAdjacent: no hay suficientes nodos para intercambiar (size={}).", size);
+                loggerTiempos.info("SimpleLinkedList.swapAdjacent: FIN (trivial)");
+                monitor.finalizado();
+                return;
+            }
+
+            Node Imaginario = new Node(0);
+            Imaginario.next = head;
+            Node prev = Imaginario;
+
+            int par = 0;
+            while (prev.next != null && prev.next.next != null) {
+                Node first = prev.next;
+                Node second = first.next;
+                Node nextPair = second.next;
+
+                logger.info("SwapAdjacent: intercambiando par #{} -> [{} , {}]", par, first.data, second.data);
+
+                prev.next = second;
+                second.next = first;
+                first.next = nextPair;
+
+                prev = first;
+                par++;
+            }
+            head = Imaginario.next;
+
+            logger.info("SwapAdjacent: intercambio finalizado. Pares procesados={}", par);
+            loggerTiempos.info("SimpleLinkedList.swapAdjacent: FIN");
+        } catch (Exception e) {
+            logger.error("Error durante el intercambio de nodos adyacentes: ", e);
+        } finally {
             monitor.finalizado();
-            return;
         }
-
-        Node Imaginario = new Node(0);
-        Imaginario.next = head;
-        Node prev = Imaginario;
-
-        int par = 0;
-        while (prev.next != null && prev.next.next != null) {
-            Node first = prev.next;
-            Node second = first.next;
-            Node nextPair = second.next;
-
-            logger.info("SwapAdjacent: intercambiando par #{} -> [{} , {}]", par, first.data, second.data);
-
-            prev.next = second;
-            second.next = first;
-            first.next = nextPair;
-
-            prev = first;
-            par++;
-        }
-        head = Imaginario.next;
-
-        logger.info("SwapAdjacent: intercambio finalizado. Pares procesados={}", par);
-        loggerTiempos.info("SimpleLinkedList.swapAdjacent: FIN");
-        monitor.finalizado();
     }
 
-    public int size() { return size; }
-    public boolean isEmpty() { return size == 0; }
+    public int size() {
+        return size;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
 
     public int[] toIntArray() {
         PerformanceMonitor monitor = new PerformanceMonitor("SimpleLinkedList.toIntArray");
-        monitor.inicio();
+        int[] out = null;
+        try {
+            monitor.inicio();
 
-        loggerTiempos.info("SimpleLinkedList.toIntArray: INICIO");
-        int[] out = new int[size];
-        Node Lol = head;
-        int i = 0;
-        while (Lol != null) {
-            out[i++] = Lol.data;
-            Lol = Lol.next;
+            loggerTiempos.info("SimpleLinkedList.toIntArray: INICIO");
+            out = new int[size];
+            Node Lol = head;
+            int i = 0;
+            while (Lol != null) {
+                out[i++] = Lol.data;
+                Lol = Lol.next;
+            }
+            logger.info("toIntArray: arreglo generado con length={}", out.length);
+            loggerTiempos.info("SimpleLinkedList.toIntArray: FIN");
+        } catch (Exception e) {
+            logger.error("Error al convertir la lista a arreglo: ", e);
+        } finally {
+            monitor.finalizado();
         }
-        logger.info("toIntArray: arreglo generado con length={}", out.length);
-        loggerTiempos.info("SimpleLinkedList.toIntArray: FIN");
-
-        monitor.finalizado();
         return out;
     }
 

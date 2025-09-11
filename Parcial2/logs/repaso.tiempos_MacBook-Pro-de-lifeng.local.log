@@ -9918,3 +9918,4 @@
 2025-09-11 10:32:36 [main] INFO  tiempos - SimpleLinkedList.toIntArray: FIN
 2025-09-11 10:32:36 [main] INFO  tiempos - Frase.decrypt: FIN
 2025-09-11 10:32:36 [main] INFO  tiempos - ApiFrases.ejecutar: FIN
+2025-09-11 10:48:00 [main] INFO  tiempos - ApiFrases.ejecutar: INICIO

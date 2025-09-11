@@ -61,7 +61,12 @@ public class ApiFrases {
         private String a; 
 
         public String getQ() {
-            return q;
+            try {
+                return q;
+            } catch (Exception e) {
+                logger.error("Error en getQ(): " + e.getMessage());
+                return null;
+            }
         }
 
         @Override
@@ -71,40 +76,44 @@ public class ApiFrases {
 
     }
     public static void ejecutar() {
-        PerformanceMonitor monitor = new PerformanceMonitor("ApiFrases.ejecutar");
-        monitor.inicio();
+        try {
+            PerformanceMonitor monitor = new PerformanceMonitor("ApiFrases.ejecutar");
+            monitor.inicio();
 
-        loggerTiempos.info("ApiFrases.ejecutar: INICIO");
+            loggerTiempos.info("ApiFrases.ejecutar: INICIO");
 
-        List<Quote> quotes = obtenerQuotes();
-        logger.info("Se obtuvieron {} frases del API para procesar.", quotes.size());
+            List<Quote> quotes = obtenerQuotes();
+            logger.info("Se obtuvieron {} frases del API para procesar.", quotes.size());
 
-        System.out.println("=== Frases obtenidas del API ===");
-        for (Quote q : quotes) {
-            logger.info("Imprimiendo frase obtenida: {}", q);
-            System.out.println(q);
+            System.out.println("=== Frases obtenidas del API ===");
+            for (Quote q : quotes) {
+                logger.info("Imprimiendo frase obtenida: {}", q);
+                System.out.println(q);
+            }
+
+            System.out.println("\n=== Encriptacion con tu clase Frase ===");
+            for (Quote q : quotes) {
+                logger.info("Procesando frase para encriptar y desencriptar: {}", q.getQ());
+
+                String texto = q.getQ();
+                Frase frase = new Frase(texto);
+
+                logger.info("Mostrando mensaje encriptado en consola...");
+                frase.showEncrypted();
+                System.out.println();
+
+                logger.info("Mostrando mensaje desencriptado en consola...");
+                frase.showDecrypted();
+                System.out.println();
+
+                logger.info("Ronda Completada para frase: {}", q.getQ());
+            }
+
+            loggerTiempos.info("ApiFrases.ejecutar: FIN");
+            monitor.finalizado();
+        } catch (Exception e) {
+            logger.error("Error en ejecutar(): " + e.getMessage());
         }
-
-        System.out.println("\n=== Encriptacion con tu clase Frase ===");
-        for (Quote q : quotes) {
-            logger.info("Procesando frase para encriptar y desencriptar: {}", q.getQ());
-
-            String texto = q.getQ();
-            Frase frase = new Frase(texto);
-
-            logger.info("Mostrando mensaje encriptado en consola...");
-            frase.showEncrypted();
-            System.out.println();
-
-            logger.info("Mostrando mensaje desencriptado en consola...");
-            frase.showDecrypted();
-            System.out.println();
-
-            logger.info("Ronda Completada para frase: {}", q.getQ());
-        }
-
-        loggerTiempos.info("ApiFrases.ejecutar: FIN");
-        monitor.finalizado();
     }
 
 }
