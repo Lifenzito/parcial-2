@@ -3,7 +3,7 @@
  */
 package parcial2;
 
-import parcial2.Model.ApiFrases;
+import parcial2.Service.ApiFrases;
 
 public class App {
     public static void main(String[] args) {
