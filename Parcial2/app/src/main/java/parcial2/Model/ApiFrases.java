@@ -17,6 +17,7 @@ import parcial2.Util.PerformanceMonitor;
 public class ApiFrases {
     private static final Logger logger        = LogManager.getLogger(ApiFrases.class.getName());
     private static final Logger loggerTiempos = LogManager.getLogger("tiempos");
+
     private static List<Quote> obtenerQuotes() {
         PerformanceMonitor monitor = new PerformanceMonitor("ApiFrases.obtenerQuotes");
         monitor.inicio();
@@ -29,19 +30,22 @@ public class ApiFrases {
         
         try {
             HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create(apiUrl))
-            .header("Accept", "application/json")
-            .GET()
-            .build();
+                .uri(URI.create(apiUrl))
+                .header("Accept", "application/json")
+                .GET()
+                .build();
             
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             
             if (response.statusCode() == 200) {
                 Quote[] arr = gson.fromJson(response.body(), Quote[].class);
                 if (arr != null) {
+                    int added = 0;
                     for (Quote q : arr) {
                         if (q != null && q.getQ() != null && !q.getQ().isEmpty()) {
                             lista.add(q);
+                            added++;
+                            if (added == 10) break;
                         }
                     }
                 }
@@ -68,8 +72,8 @@ public class ApiFrases {
         public String toString() {
             return "\"" + q + "\" — " + a;
         }
-
     }
+
     public static void ejecutar() {
         PerformanceMonitor monitor = new PerformanceMonitor("ApiFrases.ejecutar");
         monitor.inicio();
@@ -106,9 +110,4 @@ public class ApiFrases {
         loggerTiempos.info("ApiFrases.ejecutar: FIN");
         monitor.finalizado();
     }
-
-
-
 }
-
-    
