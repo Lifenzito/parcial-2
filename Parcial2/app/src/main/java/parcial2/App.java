@@ -3,19 +3,12 @@
  */
 package parcial2;
 
-import parcial2.Model.Frase;
+import parcial2.Model.ApiFrases;
 
 public class App {
-
     public static void main(String[] args) {
-
-
-        Frase f1 = new Frase("HOLA");
-        f1.showEncrypted();
-
-        Frase f2 = new Frase("LIFENG ES GAY");
-        f2.showEncrypted();
-
+      
+        ApiFrases.ejecutar();
 
     }
 }
